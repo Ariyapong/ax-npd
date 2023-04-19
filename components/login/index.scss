@@ -1,0 +1,20 @@
+.bg {
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button {
+    height: 48px;
+    color: white;
+    background-color: #3750A1;
+    border-radius: 8px;
+    border-style: none;
+    padding: 0 1rem;
+    cursor: pointer;
+}

@@ -1,0 +1,29 @@
+/* This CSS is common to all pages */
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+a {
+  text-decoration: none;
+}
+
+.w-screen {
+  width: 100vw;
+}
+.h-screen {
+  height: 100vh;
+}
+.navitem {
+  padding: 3px 10px;
+}
+.navitem.is-active {
+  background-color: #eee;
+}
+.layout {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}

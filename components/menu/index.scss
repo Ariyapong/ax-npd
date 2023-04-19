@@ -1,0 +1,17 @@
+.menus {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.menu {
+    color: black;
+    width: 10rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

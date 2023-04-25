@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Login } from '../../components/login'
+import { Login } from '../../../components/login'
 
 export { Page }
 

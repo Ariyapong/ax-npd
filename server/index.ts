@@ -2,6 +2,7 @@
 
 import express from 'express'
 import compression from 'compression'
+import cors from 'cors'
 import { renderPage } from 'vite-plugin-ssr/server'
 import { root } from './root.js'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -12,6 +13,7 @@ async function startServer() {
   const app = express()
 
   app.use(compression())
+  app.use(cors())
 
   if (isProduction) {
     const sirv = (await import('sirv')).default

@@ -7,14 +7,14 @@ import './index.scss'
 export { Login }
 
 function Login() {
-    const { instance } = useMsal();
+    const { instance } = useMsal()
 
-    const handleLogin = () => {
-        instance.loginRedirect(loginRequest).then(e => {
-            console.log("::success", e)
-        }).catch(e => {
-            console.log(e)
-        })
+    const handleLogin = async () => {
+        try {
+            await instance.loginRedirect(loginRequest)
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     return (

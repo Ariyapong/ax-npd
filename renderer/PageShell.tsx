@@ -23,6 +23,7 @@ function PageShell({ children, pageContext }: { children: React.ReactNode; pageC
     if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
       const payload = event.payload as AuthenticationResult
       const account = payload.account
+      console.log('### account', account)
       pca.setActiveAccount(account)
     }
   });

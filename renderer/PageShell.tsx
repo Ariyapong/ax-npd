@@ -7,7 +7,7 @@ import { Link } from './Link'
 import { AuthenticationResult, EventMessage, EventType, PublicClientApplication } from '@azure/msal-browser'
 import { msalConfig } from '../authConfig'
 import { AuthenticatedTemplate, MsalProvider, UnauthenticatedTemplate } from '@azure/msal-react'
-import { Login } from '../components/login'
+import { Login } from '../src/components/login'
 
 export { PageShell }
 

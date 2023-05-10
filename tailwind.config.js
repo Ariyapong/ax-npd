@@ -6,7 +6,14 @@ export default {
     "./renderer/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        a4: '210mm',
+      },
+      height: {
+        a4: '297mm',
+      },
+    },
   },
   plugins: [
   ],

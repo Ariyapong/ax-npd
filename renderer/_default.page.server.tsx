@@ -12,15 +12,19 @@ import { ServerStyleSheet } from "styled-components";
 
 async function render(pageContext: PageContextServer) {
   const { Page, pageProps } = pageContext
+  let pageHtml = ''
   // This render() hook only supports SSR, see https://vite-plugin-ssr.com/render-modes for how to modify render() to support SPA
-  if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined')
+  // if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined')
 
   const sheet = new ServerStyleSheet();
-  const pageHtml = ReactDOMServer.renderToString(
-    <PageShell pageContext={pageContext}>
-      <Page {...pageProps} />
-    </PageShell>
-  )
+
+  if (Page) {
+    pageHtml = ReactDOMServer.renderToString(
+      <PageShell pageContext={pageContext}>
+        <Page {...pageProps} />
+      </PageShell>
+    )
+  }
 
   // See https://vite-plugin-ssr.com/head
   const { documentProps } = pageContext.exports

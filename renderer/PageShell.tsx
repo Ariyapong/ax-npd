@@ -1,41 +1,22 @@
 import React from 'react'
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 import logo from './logo.png'
 import { PageContextProvider } from './usePageContext'
 import type { PageContext } from './types'
-import './PageShell.css'
 import { Link } from './Link'
-import { AuthenticationResult, EventMessage, EventType, PublicClientApplication } from '@azure/msal-browser'
-import { msalConfig } from '../authConfig'
-import { AuthenticatedTemplate, MsalProvider, UnauthenticatedTemplate } from '@azure/msal-react'
-import { Login } from '../src/components/login'
+import { persistor, store } from '../src/store'
+import './PageShell.css'
 
 export { PageShell }
 
 function PageShell({ children, pageContext }: { children: React.ReactNode; pageContext: PageContext }) {
-  const pca = new PublicClientApplication(msalConfig)
-  // Account selection logic is app dependent. Adjust as needed for different use cases.
-  const accounts = pca.getAllAccounts()
-  if (accounts.length > 0) {
-    pca.setActiveAccount(accounts[0])
-  }
-
-  pca.addEventCallback((event: EventMessage) => {
-    if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
-      const payload = event.payload as AuthenticationResult
-      const account = payload.account
-      console.log('### account', account)
-      pca.setActiveAccount(account)
-    }
-  });
 
   return (
     <React.StrictMode>
-      <MsalProvider instance={pca}>
-        <PageContextProvider pageContext={pageContext}>
-          <UnauthenticatedTemplate>
-            <Login />
-          </UnauthenticatedTemplate>
-          <AuthenticatedTemplate>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <PageContextProvider pageContext={pageContext}>
             <Layout>
               <Sidebar>
                 <Logo />
@@ -45,12 +26,18 @@ function PageShell({ children, pageContext }: { children: React.ReactNode; pageC
                 <Link className="navitem" href="/about">
                   About
                 </Link>
+                <Link className="navitem" href="/report">
+                  Report
+                </Link>
+                <Link className="navitem" href="/workflow">
+                  Workflow
+                </Link>
               </Sidebar>
               <Content>{children}</Content>
             </Layout>
-          </AuthenticatedTemplate>
-        </PageContextProvider>
-      </MsalProvider>
+          </PageContextProvider>
+        </PersistGate>
+      </Provider>
     </React.StrictMode>
   )
 }
@@ -84,10 +71,10 @@ function Content({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        padding: 20,
-        paddingBottom: 50,
-        borderLeft: '2px solid #eee',
-        minHeight: '100vh'
+        // padding: 20,
+        // paddingBottom: 50,
+        // borderLeft: '2px solid #eee',
+        // minHeight: '100vh'
       }}
     >
       {children}

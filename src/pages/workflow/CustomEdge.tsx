@@ -1,6 +1,10 @@
 import React, { FC } from 'react'
 import { EdgeProps, getBezierPath, EdgeLabelRenderer } from 'reactflow'
 
+export type CustomEdgeData = {
+    output?: string
+}
+
 const CustomEdge: FC<EdgeProps> = ({
     id,
     sourceX,

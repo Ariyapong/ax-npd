@@ -56,11 +56,11 @@ const edgeTypes: EdgeTypes = {
 export const initialNodes: Array<Node<CustomNodeData>> = [
     { id: '1', type: 'custom', position, data: { label: 'Start', roles: ['Admin'] } },
     { id: '2', type: 'custom', position, data: { label: 'Product Request', roles: ['Admin'] } },
-    { id: '3', type: 'custom', position, data: { label: 'Charter Gate', roles: ['Admin'], weeks: 3, icon: <FunctionIcon /> } },
+    { id: '3', type: 'custom', position, data: { label: 'Charter Gate', roles: ['Admin'], weeks: 3, type: 'gate' } },
     { id: '4', type: 'custom', position, data: { label: 'Prototype Taste Draft Cost and Price', roles: ['Admin'], weeks: 5 } },
     { id: '5', type: 'custom', position, data: { label: 'Packaging Prototype', roles: ['Admin'], weeks: 5 } },
     { id: '6', type: 'custom', position, data: { label: 'Sales Projection', roles: ['Admin'], weeks: 5 } },
-    { id: '7', type: 'custom', position, data: { label: 'Contract Gate', roles: ['Admin'], weeks: 5, icon: <FunctionIcon /> }, },
+    { id: '7', type: 'custom', position, data: { label: 'Contract Gate', roles: ['Admin'], weeks: 5, type: 'gate' }, },
     { id: '8', type: 'custom', position, data: { label: 'Condition Check', roles: ['Admin'], weeks: 5 } },
     { id: '9', type: 'custom', position, data: { label: 'Regulatory Process', roles: ['Admin'], weeks: 5 } },
     { id: '10', type: 'custom', position, data: { label: 'New Product Item Request', roles: ['Admin'], weeks: 5 } },

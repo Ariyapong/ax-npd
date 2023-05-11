@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactFlow, {
     MiniMap,
     Controls,
@@ -18,12 +18,18 @@ import ReactFlow, {
     NodeTypes,
     ReactFlowProvider,
     useReactFlow,
+    ReactFlowInstance,
+    NodeMouseHandler,
+    OnConnectEnd,
+    OnConnectStart,
+    OnConnect,
 } from 'reactflow'
 import dagre from 'dagre'
 import CustomNode, { CustomNodeData } from './CustomNode'
 import CustomEdge, { CustomEdgeData } from './CustomEdge'
 import CustomEdgeStartEnd from './CustomEdgeStartEnd'
 import FunctionIcon from './FunctionIcon'
+import { nanoid } from 'nanoid'
 import 'reactflow/dist/style.css'
 
 export { Page }
@@ -114,8 +120,8 @@ export const initialEdges: Array<Edge<CustomEdgeData>> = [
     },
 ]
 
-let id = Number(initialNodes.pop()?.id)
-const getId = () => `${id++}`
+// let id = Number(initialNodes.pop()?.id)
+const getId = () => nanoid(10)
 
 const AddNodeOnEdgeDrop = () => {
     const dagreGraph = new dagre.graphlib.Graph()
@@ -157,26 +163,29 @@ const AddNodeOnEdgeDrop = () => {
     }
 
     const reactFlowWrapper = useRef<HTMLDivElement>(null)
-    const connectingNodeId = useRef(null)
+    const connectingNodeId = useRef<string | null>(null)
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
         initialNodes,
         initialEdges
     )
+    const [rfInstance, setRfInstance] = useState<ReactFlowInstance<CustomNodeData, CustomEdgeData>>()
+    const [selectedNodeLabel, setSelectedNodeLabel] = useState<string>('')
+    const [selectedNodeId, setSelectedNodeId] = useState<string>('')
     const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes)
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges)
-    const { project } = useReactFlow();
-    const onConnect = useCallback(
-        (params: Edge | Connection) =>
+    const { project } = useReactFlow()
+    const onConnect: OnConnect = useCallback(
+        (params) =>
             setEdges((eds) =>
                 addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: false }, eds)
             ),
         []
     )
-    const onConnectStart = useCallback((_: any, { nodeId }: any) => {
-        connectingNodeId.current = nodeId;
+    const onConnectStart: OnConnectStart = useCallback((_event, { nodeId }) => {
+        connectingNodeId.current = nodeId
     }, [])
-    const onConnectEnd = useCallback(
-        (event: MouseEvent | TouchEvent) => {
+    const onConnectEnd: OnConnectEnd = useCallback(
+        (event) => {
             if (connectingNodeId.current) {
                 const target = event.target as HTMLElement
                 const targetIsPane = target?.classList.contains('react-flow__pane')
@@ -184,35 +193,67 @@ const AddNodeOnEdgeDrop = () => {
                 if (targetIsPane) {
                     // we need to remove the wrapper bounds, in order to get the correct position
                     const { top, left } = reactFlowWrapper.current?.getBoundingClientRect() as DOMRect
-                    const id = getId();
+                    const id = getId()
                     const newNode = {
                         id,
-                        // we are removing the half of the node width (75) to center the new node
+                        type: 'custom',
+                        // Half of the node width defined in .react-flow__node-custom (150/2 = 75) to center the new node
                         position: project({ x: (event as MouseEvent).clientX - left - 75, y: (event as MouseEvent).clientY - top }),
                         data: { label: `Node ${id}` },
-                    };
+                    }
+                    const newEdge = {
+                        id,
+                        source: connectingNodeId.current,
+                        target: id,
+                        style,
+                        markerEnd
+                    }
 
-                    setNodes((nds) => nds.concat(newNode));
-                    setEdges((eds) => eds.concat({ id, source: connectingNodeId.current!, target: id }))
+                    setNodes((nds) => nds.concat(newNode))
+                    setEdges((eds) => eds.concat(newEdge))
                 }
             }
         },
         [project]
     )
+    const onSave: MouseEventHandler = useCallback(() => {
+        if (rfInstance) {
+            const flow = rfInstance.toObject()
+            console.log(JSON.stringify(flow, null, 2))
+        }
+    }, [rfInstance])
+    const onNodeClick: NodeMouseHandler = useCallback((_event, node: Node<CustomNodeData>) => {
+        setSelectedNodeId(node.id)
+        setSelectedNodeLabel(node.data.label || '')
+    }, [])
+    useEffect(() => {
+        setNodes((nds) =>
+            nds.map((node) => {
+                if (selectedNodeId && node.id === selectedNodeId) {
+                    // when you update a simple type you can just update the value
+                    node.data = {
+                        ...node.data,
+                        label: selectedNodeLabel
+                    }
+                }
+                return node
+            })
+        )
+    }, [selectedNodeLabel])
 
-    const onLayout = useCallback(
-        (direction: string) => {
-            const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-                nodes,
-                edges,
-                direction
-            );
+    // const onLayout = useCallback(
+    //     (direction: string) => {
+    //         const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+    //             nodes,
+    //             edges,
+    //             direction
+    //         );
 
-            setNodes([...layoutedNodes])
-            setEdges([...layoutedEdges])
-        },
-        [nodes, edges]
-    )
+    //         setNodes([...layoutedNodes])
+    //         setEdges([...layoutedEdges])
+    //     },
+    //     [nodes, edges]
+    // )
 
     return (
 
@@ -227,12 +268,19 @@ const AddNodeOnEdgeDrop = () => {
                 onConnect={onConnect}
                 onConnectStart={onConnectStart}
                 onConnectEnd={onConnectEnd}
+                onInit={setRfInstance}
+                onNodeClick={onNodeClick}
+                zoomOnScroll={false}
                 fitView={false}
             >
-                {/* <Panel position="top-right">
-                    <button onClick={() => onLayout('TB')}>vertical layout</button>
-                    <button onClick={() => onLayout('LR')}>horizontal layout</button>
-                </Panel> */}
+                <Panel position="top-right">
+                    <button onClick={onSave}>Save</button>
+                    {/* <button onClick={() => onLayout('TB')}>vertical layout</button>
+                    <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
+                    <div className="updatenode__controls">
+                        <label>label: </label><input value={selectedNodeLabel} onChange={(evt) => setSelectedNodeLabel(evt.target.value)} />
+                    </div>
+                </Panel>
                 <Controls />
                 {/* <MiniMap /> */}
                 <Background variant={BackgroundVariant.Dots} gap={12} size={1} />

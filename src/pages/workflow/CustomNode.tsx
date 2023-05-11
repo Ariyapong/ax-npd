@@ -14,12 +14,12 @@ export type CustomNodeData = {
 export default memo(({ data }: NodeProps<CustomNodeData>) => {
     return (
         <>
-            {data.weeks &&
-                <div className="weeks">
-                    <div>{data.weeks}</div>
-                </div>
-            }
             <div className="wrapper">
+                {data.weeks &&
+                    <div className="weeks">
+                        <div>{data.weeks}</div>
+                    </div>
+                }
                 <div className="inner">
                     <Handle type="target" position={Position.Top} />
                     {data.icon && <div className="icon">{data.icon}</div>}

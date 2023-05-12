@@ -194,7 +194,6 @@ const getLayoutedElements = (dagreGraph: dagre.graphlib.Graph<{}>, workflow: Wor
 }
 
 const AddNodeOnEdgeDrop = ({ workflow }: { workflow: Workflow }) => {
-    console.log('AddNodeOnEdgeDrop')
     const dagreGraph = new dagre.graphlib.Graph()
     dagreGraph.setDefaultEdgeLabel(() => ({}))
 
@@ -265,14 +264,12 @@ const AddNodeOnEdgeDrop = ({ workflow }: { workflow: Workflow }) => {
     }, [])
 
     useEffect(() => {
-        console.log('@')
-        setViewport({ x: 0, y: 0, zoom: 1 })
+        setViewport({ x: 50, y: 50, zoom: 1 })
         setNodes(workflow.nodes)
         setEdges(workflow.edges)
     }, [workflow])
 
     useEffect(() => {
-        console.log('#')
         setNodes((nds) =>
             nds.map((node) => {
                 if (selectedNodeId && node.id === selectedNodeId) {
@@ -341,7 +338,6 @@ function Page() {
     const workflow = workflowSelector(state)
 
     useEffect(() => {
-        console.log('Page')
         dispatch(setWorkflow(workflow1))
     }, [])
 

@@ -8,6 +8,7 @@ import rootReducer from './rootReducer'
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist: ['workflow']
 }
 
 const presistedReducer = persistReducer(persistConfig, rootReducer)

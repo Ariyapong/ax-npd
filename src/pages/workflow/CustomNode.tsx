@@ -11,6 +11,7 @@ export type CustomNodeData = {
     roles?: Array<string>
     weeks?: number
     type?: 'gate' | undefined
+    subflow?: number
 }
 
 export default memo(({ data }: NodeProps<CustomNodeData>) => {
@@ -23,7 +24,7 @@ export default memo(({ data }: NodeProps<CustomNodeData>) => {
                             <div>{data.weeks}</div>
                         </div>)
                     }
-                    <div className="inner">
+                    <div className={`inner${data.subflow ? ' has-subflow' : ''}${data.type === 'gate' ? ' gate' : ''}`}>
                         <Handle type="target" position={Position.Top} />
                         {data.type === 'gate' && <div className="icon"><FunctionIcon /></div>}
                         {data.label}

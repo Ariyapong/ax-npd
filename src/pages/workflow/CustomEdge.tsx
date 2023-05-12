@@ -2,10 +2,10 @@ import React, { FC } from 'react'
 import { EdgeProps, getBezierPath, EdgeLabelRenderer } from 'reactflow'
 
 export type CustomEdgeData = {
-    output?: string
+    action?: string
 }
 
-const CustomEdge: FC<EdgeProps> = ({
+const CustomEdge: FC<EdgeProps<CustomEdgeData>> = ({
     id,
     sourceX,
     sourceY,
@@ -30,21 +30,25 @@ const CustomEdge: FC<EdgeProps> = ({
         <>
             <path id={id} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} style={style} />
             <EdgeLabelRenderer>
-                <div
-                    style={{
-                        position: 'absolute',
-                        transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-                        background: '#ffcc00',
-                        padding: 5,
-                        borderRadius: 5,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        height: 26
-                    }}
-                    className="nodrag nopan"
-                >
-                    {data.output}
-                </div>
+                {data?.action ?
+                    <div
+                        style={{
+                            position: 'absolute',
+                            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+                            background: '#ffcc00',
+                            padding: 5,
+                            borderRadius: 5,
+                            fontSize: 12,
+                            fontWeight: 700,
+                            height: 26
+                        }}
+                        className="nodrag nopan"
+                    >
+                        {data.action}
+                    </div>
+                    :
+                    null
+                }
             </EdgeLabelRenderer>
         </>
     )

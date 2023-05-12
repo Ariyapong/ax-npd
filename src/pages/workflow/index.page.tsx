@@ -193,7 +193,7 @@ const getLayoutedElements = (dagreGraph: dagre.graphlib.Graph<{}>, workflow: Wor
     return { nodes, edges }
 }
 
-const AddNodeOnEdgeDrop = ({ workflow }: { workflow: Workflow }) => {
+const WorkflowDiagram = ({ workflow }: { workflow: Workflow }) => {
     const dagreGraph = new dagre.graphlib.Graph()
     dagreGraph.setDefaultEdgeLabel(() => ({}))
 
@@ -348,7 +348,7 @@ function Page() {
     return (
         <div style={{ width: '50rem', height: '100vh' }}>
             <ReactFlowProvider>
-                <AddNodeOnEdgeDrop workflow={getWorkflow()} />
+                <WorkflowDiagram workflow={getWorkflow()} />
             </ReactFlowProvider>
         </div>
     )

@@ -26,7 +26,7 @@ import dagre from 'dagre'
 import CustomNode, { CustomNodeData } from './CustomNode'
 import CustomEdge, { CustomEdgeData } from './CustomEdge'
 import CustomEdgeStartEnd from './CustomEdgeStartEnd'
-import { nanoid } from 'nanoid'
+import { customAlphabet } from 'nanoid'
 import { Workflow, setWorkflow, workflowSelector } from '../../store/workflow'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/rootReducer'
@@ -35,6 +35,8 @@ import 'reactflow/dist/style.css'
 
 export { Page }
 
+const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 12)
+const getId = () => nanoid()
 const position = { x: 0, y: 0 };
 const style = {
     strokeWidth: 1.2,
@@ -53,6 +55,12 @@ const edgeTypes: EdgeTypes = {
     'custom': CustomEdge,
     'start-end': CustomEdgeStartEnd,
 }
+
+export const initialNodes: Array<Node<CustomNodeData>> = [
+    { id: getId(), type: 'custom', position, data: { label: 'Start', roles: ['Admin'] } },
+]
+
+export const initialEdges: Array<Edge<CustomEdgeData>> = []
 
 export const workflowNodes: Array<Node<CustomNodeData>> = [
     { id: '1', type: 'custom', position, data: { label: 'Start', roles: ['Admin'] } },
@@ -153,9 +161,6 @@ export const workflow2: Workflow = {
     nodes: subflowNodes,
     edges: subflowEdges,
 }
-
-// let id = Number(workflowNodes.pop()?.id)
-const getId = () => nanoid(10)
 
 const getLayoutedElements = (dagreGraph: dagre.graphlib.Graph<{}>, workflow: Workflow, direction = 'TB') => {
     const nodeWidth = 120

@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Mustache from 'mustache'
 import axios from 'axios'
 import JoditEditor from 'jodit-react'
+import { asBlob } from 'html-docx-js-typescript'
+import { saveAs } from 'file-saver'
 import template2 from '../../../templates/template2.mustache?raw'
 import './report.scss'
 
@@ -83,7 +85,7 @@ function Page() {
         setRenderedTemplate(rendered)
     }, [content])
 
-    const save = useCallback(async () => {
+    const saveAsPdf = useCallback(async () => {
         const resp = await axios.post<BlobPart>('/api/pdf', {
             template: 'template2',
             data: mock(content),
@@ -96,6 +98,11 @@ function Page() {
         document.body.appendChild(link)
         link.click()
         link.remove()
+    }, [renderedTemplate])
+
+    const saveAsWord = useCallback(async () => {
+        const fileBuffer = await asBlob(renderedTemplate)
+        saveAs(fileBuffer as Blob, 'test.docx')
     }, [renderedTemplate])
 
     return (
@@ -112,7 +119,10 @@ function Page() {
                 </React.Suspense>
                 <iframe srcDoc={renderedTemplate} style={{ width: '100%', height: '100%' }}></iframe>
             </div>
-            <div className="button" onClick={save}>PDF</div>
+            <div>
+                <div className="button" onClick={saveAsPdf}>PDF</div>
+                <div className="button" onClick={saveAsWord}>MS Word</div>
+            </div>
         </div>
     )
 }

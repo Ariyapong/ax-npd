@@ -1,0 +1,18 @@
+.pvtAxisContainer,
+.pvtVals,
+.pvtAxisContainer li span.pvtAttr {
+    background-color: white;
+    border: 1px solid rgb(228, 231, 236);
+}
+
+.modebar-btn {
+
+    &.plotlyjsicon,
+    &[data-val="select"],
+    &[data-val="lasso"],
+    &[data-val="reset"],
+    &[data-val="auto"],
+    &[data-val="zoom"] {
+        display: none;
+    }
+}

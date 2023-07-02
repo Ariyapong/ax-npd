@@ -22,6 +22,7 @@ export type PageContextCustom = {
   Page: Page
   pageProps?: PageProps
   urlPathname: string
+  env: Record<string, any>
   exports: {
     documentProps?: {
       title?: string

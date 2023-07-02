@@ -1,4 +1,6 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+// import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import * as toolkitRaw from '@reduxjs/toolkit'
+const { createSlice } = ((toolkitRaw as any).default ?? toolkitRaw) as typeof toolkitRaw
 
 type ReportData = {
   imgUrl: string
@@ -21,7 +23,7 @@ export const reportSlice = createSlice({
   name: 'report',
   initialState,
   reducers: {
-    setReportData: (state, action: PayloadAction<{ data: ReportData }>) => {
+    setReportData: (state, action: toolkitRaw.PayloadAction<{ data: ReportData }>) => {
       const { data } = action.payload
       const activePage = state.activePage
       const found = state.details[activePage]
@@ -36,11 +38,11 @@ export const reportSlice = createSlice({
       state.activePage = lastLenght
       state.details.push({ header: {}, body: '', imgUrl: '', html: '' })
     },
-    deletePage: (state, action: PayloadAction<number>) => {
+    deletePage: (state, action: toolkitRaw.PayloadAction<number>) => {
       const index = action.payload
       state.details.splice(index, 1)
     },
-    setActivePage: (state, action: PayloadAction<number>) => {
+    setActivePage: (state, action: toolkitRaw.PayloadAction<number>) => {
       state.activePage = action.payload
     }
   },

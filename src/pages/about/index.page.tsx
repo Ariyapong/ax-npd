@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { usePageContext } from '../../../renderer/usePageContext'
 
 export { Page }
 
@@ -59,11 +60,12 @@ const filters = [
 ]
 
 function Page() {
+  const pageContext = usePageContext()
   const [arrayValue, setArrayValue] = useState<Array<any>>([])
 
   return (
     <>
-      <h1>About</h1>
+      <h1>{`APP_TEST ${pageContext.env.VITE_APP_TEST}`}</h1>
       <div className="flex flex-col">
         {filters.map((item, index) => {
           if (item.filter.type === 'text' || item.filter.type === 'date') {

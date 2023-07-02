@@ -10,34 +10,37 @@ import './PageShell.css'
 
 export { PageShell }
 
-function PageShell({ children, pageContext }: { children: React.ReactNode; pageContext: PageContext }) {
+function PageShell({ children, pageContext }: { children?: React.ReactNode; pageContext?: PageContext }) {
 
   return (
     <React.StrictMode>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <PageContextProvider pageContext={pageContext}>
+      <PageContextProvider pageContext={pageContext!}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
             <Layout>
               <Sidebar>
                 <Logo />
                 <Link className="navitem" href="/">
                   Home
                 </Link>
-                <Link className="navitem" href="/about">
+                {/* <Link className="navitem" href="/about">
                   About
-                </Link>
+                </Link> */}
                 <Link className="navitem" href="/report">
                   Report
                 </Link>
                 <Link className="navitem" href="/workflow">
                   Workflow
                 </Link>
+                <Link className="navitem" href="/pivot">
+                  Pivot
+                </Link>
               </Sidebar>
               <Content>{children}</Content>
             </Layout>
-          </PageContextProvider>
-        </PersistGate>
-      </Provider>
+          </PersistGate>
+        </Provider >
+      </PageContextProvider>
     </React.StrictMode>
   )
 }

@@ -26,143 +26,27 @@ import dagre from 'dagre'
 import CustomNode, { CustomNodeData } from './CustomNode'
 import CustomEdge, { CustomEdgeData } from './CustomEdge'
 import CustomEdgeStartEnd from './CustomEdgeStartEnd'
-import { customAlphabet } from 'nanoid'
-import { Workflow, setWorkflow, workflowSelector } from '../../store/workflow'
+import { Workflow, setSelectedEdge, setSelectedEdgeLabel, setSelectedNode, setSelectedNodeLabel, setSelectedNodeType, setWorkflow, workflowSelector } from '@/store/workflow'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../store/rootReducer'
-import { deepClone } from '../../utils'
+import { RootState } from '@/store/rootReducer'
+import { deepClone, getId } from '@/utils'
+import { markerEnd, style, workflow1, workflow2 } from './workflow'
 import 'reactflow/dist/style.css'
+import { usePageContext } from '../../../renderer/usePageContext'
 
 export { Page }
 
-const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 12)
-const getId = () => nanoid()
-const position = { x: 0, y: 0 };
-const style = {
-    strokeWidth: 1.2,
-    stroke: '#222',
-}
-const markerEnd = {
-    type: MarkerType.ArrowClosed,
-    width: 15,
-    height: 15,
-    color: '#222',
-}
 const nodeTypes: NodeTypes = {
     'custom': CustomNode
 }
 const edgeTypes: EdgeTypes = {
     'custom': CustomEdge,
-    'start-end': CustomEdgeStartEnd,
+    // 'start-end': CustomEdgeStartEnd,
 }
 
-export const initialNodes: Array<Node<CustomNodeData>> = [
-    { id: getId(), type: 'custom', position, data: { label: 'Start', roles: ['Admin'] } },
-]
+type DirectionType = 'TB' | 'LR'
 
-export const initialEdges: Array<Edge<CustomEdgeData>> = []
-
-export const workflowNodes: Array<Node<CustomNodeData>> = [
-    { id: '1', type: 'custom', position, data: { label: 'Start', roles: ['Admin'] } },
-    { id: '2', type: 'custom', position, data: { label: 'Product Request', roles: ['Admin'] } },
-    { id: '3', type: 'custom', position, data: { label: 'Charter Gate', roles: ['Admin'], weeks: 3, type: 'gate' } },
-    { id: '4', type: 'custom', position, data: { label: 'Prototype Taste Draft Cost and Price', roles: ['Admin'], weeks: 5 } },
-    { id: '5', type: 'custom', position, data: { label: 'Packaging Prototype', roles: ['Admin'], weeks: 5 } },
-    { id: '6', type: 'custom', position, data: { label: 'Sales Projection', roles: ['Admin'], weeks: 5 } },
-    { id: '7', type: 'custom', position, data: { label: 'Contract Gate', roles: ['Admin'], weeks: 5, type: 'gate' }, },
-    { id: '8', type: 'custom', position, data: { label: 'Condition Check', roles: ['Admin'], weeks: 5 } },
-    { id: '9', type: 'custom', position, data: { label: 'Regulatory Process', roles: ['Admin'], weeks: 5 } },
-    { id: '10', type: 'custom', position, data: { label: 'New Product Item Request', roles: ['Admin'], weeks: 5 } },
-    { id: '11', type: 'custom', position, data: { label: 'Final Cost and Price', roles: ['Admin'], weeks: 5 } },
-    { id: '12', type: 'custom', position, data: { label: 'Final Packaging Trial', roles: ['Admin'], weeks: 5, subflow: 2 } },
-    { id: '13', type: 'custom', position, data: { label: 'Condition Check 1', roles: ['Admin'], weeks: 5 } },
-]
-
-export const workflowEdges: Array<Edge<CustomEdgeData>> = [
-    {
-        id: 'e1-2', source: '1', target: '2', style, markerEnd, type: 'custom', data: { action: 'Yes' }
-    },
-    {
-        id: 'e2-3', source: '2', target: '3', style, markerEnd
-    },
-    {
-        id: 'e3-4', source: '3', target: '4', style, markerEnd, type: 'custom', data: { action: 'A' }
-    },
-    {
-        id: 'e3-5', source: '3', target: '5', style, markerEnd, type: 'custom', data: { action: 'B' }
-    },
-    {
-        id: 'e3-7', source: '3', target: '7', style, markerEnd, type: 'custom', data: { action: 'C' }
-    },
-    {
-        id: 'e4-6', source: '4', target: '6', style, markerEnd
-    },
-    {
-        id: 'e5-7', source: '5', target: '7', style, markerEnd
-    },
-    {
-        id: 'e6-7', source: '6', target: '7', style, markerEnd
-    },
-    {
-        id: 'e7-8', source: '7', target: '8', style, markerEnd
-    },
-    {
-        id: 'e8-9', source: '8', target: '9', style, markerEnd, type: 'custom', data: { action: 'A' }
-    },
-    {
-        id: 'e8-10', source: '8', target: '10', style, markerEnd, type: 'custom', data: { action: 'B' }
-    },
-    {
-        id: 'e8-11', source: '8', target: '11', style, markerEnd, type: 'custom', data: { action: 'C' }
-    },
-    {
-        id: 'e8-12', source: '8', target: '12', style, markerEnd, type: 'custom', data: { action: 'D' }
-    },
-    {
-        id: 'e11-13', source: '11', target: '13', style, markerEnd
-    },
-    {
-        id: 'e10-13', source: '10', target: '13', style, markerEnd
-    },
-    {
-        id: 'e12-13', source: '12', target: '13', style, markerEnd
-    },
-]
-
-export const subflowNodes: Array<Node<CustomNodeData>> = [
-    { id: '1', type: 'custom', position, data: { label: 'Start', roles: ['Admin'] } },
-    { id: '2', type: 'custom', position, data: { label: 'Regulatory Process', roles: ['Admin'] } },
-    { id: '3', type: 'custom', position, data: { label: 'Charter Gate', roles: ['Admin'], weeks: 3, type: 'gate' } },
-    { id: '4', type: 'custom', position, data: { label: 'End', roles: ['Admin'], weeks: 5 } },
-]
-
-export const subflowEdges: Array<Edge<CustomEdgeData>> = [
-    {
-        id: 'e1-2', source: '1', target: '2', style, markerEnd, type: 'custom', data: {}
-    },
-    {
-        id: 'e2-3', source: '2', target: '3', style, markerEnd, type: 'custom', data: {}
-    },
-    {
-        id: 'e3-4', source: '3', target: '4', style, markerEnd, type: 'custom', data: {}
-    },
-]
-
-export const workflow1: Workflow = {
-    id: 1,
-    name: 'Sample 1',
-    nodes: workflowNodes,
-    edges: workflowEdges,
-}
-
-export const workflow2: Workflow = {
-    id: 2,
-    name: 'Subflow 1',
-    nodes: subflowNodes,
-    edges: subflowEdges,
-}
-
-const getLayoutedElements = (dagreGraph: dagre.graphlib.Graph<{}>, workflow: Workflow, direction = 'TB') => {
+const getLayoutedElements = (dagreGraph: dagre.graphlib.Graph<{}>, workflow: Workflow, direction: DirectionType = 'TB') => {
     const nodeWidth = 120
     const nodeHeight = 50
     const isHorizontal = direction === 'LR'
@@ -171,7 +55,10 @@ const getLayoutedElements = (dagreGraph: dagre.graphlib.Graph<{}>, workflow: Wor
     dagreGraph.setGraph({ rankdir: direction })
 
     nodes.forEach((node: Node) => {
-        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
+        dagreGraph.setNode(node.id, {
+            width: node.width || nodeWidth,
+            height: node.height || nodeHeight
+        })
     })
 
     edges.forEach((edge: Edge) => {
@@ -180,19 +67,28 @@ const getLayoutedElements = (dagreGraph: dagre.graphlib.Graph<{}>, workflow: Wor
 
     dagre.layout(dagreGraph)
 
-    nodes.forEach((node: Node) => {
+    nodes.forEach((node: Node<CustomNodeData>) => {
         const nodeWithPosition = dagreGraph.node(node.id)
         node.targetPosition = isHorizontal ? Position.Left : Position.Top
         node.sourcePosition = isHorizontal ? Position.Right : Position.Bottom
-
-        // We are shifting the dagre node position (anchor=center center) to the top left
-        // so it matches the React Flow node anchor point (top left).
         node.position = {
-            x: nodeWithPosition.x - (nodeWidth / 2),
-            y: nodeWithPosition.y - (nodeHeight / 2),
+            x: node.position.x || nodeWithPosition.x - (nodeWidth / 2),
+            y: node.position.y || nodeWithPosition.y - (nodeHeight / 2),
         };
 
         return node
+    })
+
+    edges.forEach((edge) => {
+        const source = edge.source
+        const target = edge.target
+        const targetNode = nodes.find((node) => node.id === target)
+        if (targetNode) {
+            targetNode.data = {
+                ...targetNode.data,
+                precedents: [...new Set(targetNode.data.precedents).add(source)]
+            }
+        }
     })
 
     return { nodes, edges }
@@ -204,107 +100,148 @@ const WorkflowDiagram = ({ workflow }: { workflow: Workflow }) => {
 
     const dispatch = useDispatch()
     const reactFlowWrapper = useRef<HTMLDivElement>(null)
-    const connectingNodeId = useRef<string | null>(null)
+    const sourceNodeId = useRef<string | null>(null)
+    const targetNodeId = useRef<string | null>(null)
     const [rfInstance, setRfInstance] = useState<ReactFlowInstance<CustomNodeData, CustomEdgeData>>()
-    const [selectedNodeLabel, setSelectedNodeLabel] = useState<string>('')
-    const [selectedNodeId, setSelectedNodeId] = useState<string>('')
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(dagreGraph, workflow)
     const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes)
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges)
     const { setViewport } = useReactFlow()
     const { project } = useReactFlow()
+    const { selectedNode, selectedEdge } = useSelector((state: RootState) => state.workflow)
 
     const onConnect: OnConnect = useCallback((params) => {
-        setEdges((eds) =>
-            addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: false }, eds)
-        )
+        targetNodeId.current = params.target
+        // const newEdge = { ...params, type: 'custom', style, markerEnd }
+        // setEdges((eds) => addEdge(newEdge, eds))
     }, [])
 
     const onConnectStart: OnConnectStart = useCallback((_event, { nodeId }) => {
-        connectingNodeId.current = nodeId
+        sourceNodeId.current = nodeId
     }, [])
 
     const onConnectEnd: OnConnectEnd = useCallback((event) => {
-        if (connectingNodeId.current) {
+        const source = sourceNodeId.current
+        if (source) {
             const target = event.target as HTMLElement
             const targetIsPane = target?.classList.contains('react-flow__pane')
 
+            let newNode = undefined as unknown as Node<CustomNodeData>
+            const id = getId()
+            const newEdge = {
+                id,
+                type: 'custom',
+                source,
+                style,
+                markerEnd
+            } as Edge
+
             if (targetIsPane) {
                 const { top, left } = reactFlowWrapper.current?.getBoundingClientRect() as DOMRect
-                const id = getId()
-                const newNode = {
+                newNode = {
                     id,
                     type: 'custom',
                     // Half of the node width defined in .react-flow__node-custom (150/2 = 75) to center the new node
-                    position: project({ x: (event as MouseEvent).clientX - left - 75, y: (event as MouseEvent).clientY - top }),
-                    data: { label: `Node ${id}` },
+                    position: project({ x: (event as unknown as MouseEvent).clientX - left - 75, y: (event as unknown as MouseEvent).clientY - top }),
+                    data: {
+                        label: `New ${id}`,
+                        precedents: [source]
+                    },
+                    targetPosition: Position.Top,
+                    sourcePosition: Position.Bottom,
                 }
-                const newEdge = {
-                    id,
-                    source: connectingNodeId.current,
-                    target: id,
-                    style,
-                    markerEnd
-                }
+                newEdge.target = id
 
                 setNodes((nds) => nds.concat(newNode))
                 setEdges((eds) => eds.concat(newEdge))
+            } else {
+                if (targetNodeId.current) {
+                    newEdge.target = targetNodeId.current
+                    setEdges((eds) => eds.concat(newEdge))
+                }
             }
+            console.log(nodes)
         }
     }, [project])
 
-    const onSave: MouseEventHandler = useCallback(() => {
+    const save = (): void => {
         if (rfInstance) {
             const flow = rfInstance.toObject()
             console.log(JSON.stringify(flow, null, 2))
+            dispatch(setWorkflow({
+                ...workflow,
+                nodes: flow.nodes,
+                edges: flow.edges,
+            }))
+            console.log('Saved!!!')
+        }
+    }
+
+    const onSave: MouseEventHandler = useCallback(() => {
+        save()
+    }, [rfInstance])
+
+    const onChange: React.FormEventHandler<HTMLDivElement> | undefined = useCallback(() => {
+        // console.log('Changed')
+    }, [])
+
+    const onNodeClick: NodeMouseHandler = useCallback((_event, node: Node<CustomNodeData>) => {
+        save()
+        dispatch(setSelectedNode(node.id))
+        dispatch(setSelectedEdge(null))
+        if (node.data.subflow) {
+            setViewport({ x: 50, y: 50, zoom: 1 })
+            dispatch(setWorkflow(workflow2))
         }
     }, [rfInstance])
 
-    const onNodeClick: NodeMouseHandler = useCallback((_event, node: Node<CustomNodeData>) => {
-        setSelectedNodeId(node.id)
-        setSelectedNodeLabel(node.data.label || '')
-        if (node.data.subflow) {
-            dispatch(setWorkflow(workflow2))
-        }
-    }, [])
+    const onEdgeClick = useCallback((_event: React.MouseEvent<Element, MouseEvent>, edge: Edge<CustomEdgeData>) => {
+        save()
+        dispatch(setSelectedEdge(edge.id))
+        dispatch(setSelectedNode(null))
+    }, [rfInstance])
 
     useEffect(() => {
         setViewport({ x: 50, y: 50, zoom: 1 })
+    }, [])
+
+    useEffect(() => {
         setNodes(workflow.nodes)
         setEdges(workflow.edges)
+        const icx = document.querySelector('.react-flow__panel.react-flow__attribution.bottom.right')
+        icx?.remove()
     }, [workflow])
 
     useEffect(() => {
         setNodes((nds) =>
             nds.map((node) => {
-                if (selectedNodeId && node.id === selectedNodeId) {
-                    // when you update a simple type you can just update the value
+                if (selectedNode && selectedNode.id && node.id === selectedNode.id) {
                     node.data = {
                         ...node.data,
-                        label: selectedNodeLabel
+                        label: selectedNode.data.label,
+                        type: selectedNode.data.type,
                     }
                 }
                 return node
             })
         )
-    }, [selectedNodeLabel])
+    }, [selectedNode])
 
-    // const onLayout = useCallback(
-    //     (direction: string) => {
-    //         const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-    //             nodes,
-    //             edges,
-    //             direction
-    //         );
-
-    //         setNodes([...layoutedNodes])
-    //         setEdges([...layoutedEdges])
-    //     },
-    //     [nodes, edges]
-    // )
+    useEffect(() => {
+        setEdges((edges) =>
+            edges.map((edge) => {
+                if (selectedEdge && selectedEdge.id && edge.id === selectedEdge.id) {
+                    edge.data = {
+                        ...edge.data,
+                        action: selectedEdge.data?.action
+                    }
+                }
+                return edge
+            })
+        )
+    }, [selectedEdge])
 
     return (
-
         <div style={{ flexGrow: 1, height: '100%' }} ref={reactFlowWrapper}>
             <ReactFlow
                 nodes={nodes}
@@ -316,28 +253,36 @@ const WorkflowDiagram = ({ workflow }: { workflow: Workflow }) => {
                 onConnect={onConnect}
                 onConnectStart={onConnectStart}
                 onConnectEnd={onConnectEnd}
+                onChange={onChange}
                 onInit={setRfInstance}
                 onNodeClick={onNodeClick}
+                onEdgeClick={onEdgeClick}
                 zoomOnScroll={false}
                 fitView={false}
             >
                 <Panel position="top-right">
-                    <button onClick={onSave}>Save</button>
+                    <button className="button" onClick={onSave}>Save</button>
                     {/* <button onClick={() => onLayout('TB')}>vertical layout</button>
                     <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
                     <div className="updatenode__controls">
-                        <label>label: </label><input value={selectedNodeLabel} onChange={(evt) => setSelectedNodeLabel(evt.target.value)} />
+                        <label><strong>Node Type {selectedNode?.data.type}</strong></label>
+                        <input value={selectedNode?.data.type ?? ''} onChange={(evt) => dispatch(setSelectedNodeType(evt.target.value as any))} />
+                        <label><strong>Node Label</strong></label>
+                        <input value={selectedNode?.data.label ?? ''} onChange={(evt) => dispatch(setSelectedNodeLabel(evt.target.value))} />
+                        <label><strong>Edge Label</strong></label>
+                        <input value={selectedEdge?.data?.action ?? ''} onChange={(evt) => dispatch(setSelectedEdgeLabel(evt.target.value))} />
                     </div>
                 </Panel>
-                <Controls />
+                {/* <Controls /> */}
                 {/* <MiniMap /> */}
-                <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+                {/* <Background variant={BackgroundVariant.Dots} gap={12} size={1} /> */}
             </ReactFlow>
         </div>
     )
 }
 
 function Page() {
+    const { urlParsed } = usePageContext()
     const dispatch = useDispatch()
     const state = useSelector((state: RootState) => state)
     const workflow = workflowSelector(state)
@@ -346,14 +291,54 @@ function Page() {
         dispatch(setWorkflow(workflow1))
     }, [])
 
-    const getWorkflow = () => {
+    const copyWorkflow = (): Workflow => {
         return deepClone(workflow)
     }
 
+    const setupWorkflow = (): Workflow => {
+        let strConditions = urlParsed?.search.conditions
+        const conditions = strConditions?.split(',')
+        const workflow = copyWorkflow()
+        const nodes = workflow.nodes
+        const edges = workflow.edges
+        const bypassNodes = new Set<string>()
+        const blockEdges = new Set<string>()
+
+        nodes.map((node) => {
+            const bypasses = node.data.bypasses
+            if (bypasses?.some((bypass) => conditions?.includes(bypass))) {
+                node.data.isSkipped = true
+                bypassNodes.add(node.id)
+            }
+        })
+
+        bypassNodes.forEach((nodeId) => {
+            const filteredEdges = edges.filter((edge) => edge.source === nodeId)
+            if (filteredEdges.length > 1) {
+                filteredEdges.forEach((edge) => {
+                    const bypasses = edge.data?.bypasses
+                    if (!bypasses?.some((bypass) => conditions?.includes(bypass))) {
+                        blockEdges.add(edge.id)
+                    }
+                })
+            }
+        })
+
+        edges.map((edge) => {
+            if (blockEdges.has(edge.id)) {
+                edge.data = {
+                    ...edge.data,
+                    isBlocked: true
+                }
+            }
+        })
+        return workflow
+    }
+
     return (
-        <div style={{ width: '50rem', height: '100vh' }}>
+        <div style={{ width: '60rem', height: '100vh', border: '1px dotted #ccc' }}>
             <ReactFlowProvider>
-                <WorkflowDiagram workflow={getWorkflow()} />
+                <WorkflowDiagram workflow={setupWorkflow()} />
             </ReactFlowProvider>
         </div>
     )

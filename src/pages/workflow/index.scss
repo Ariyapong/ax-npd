@@ -2,9 +2,15 @@
     --bg-color: white;
     --text-color: rgb(55, 56, 58);
     --node-border-radius: 10px;
+    --bypass-color: rgb(204, 204, 204);
     // --node-box-shadow: 10px 0 15px rgba(42, 138, 246, 0.3), -10px 0 15px rgba(233, 42, 103, 0.3);
     // background-color: var(--bg-color);
     color: var(--text-color);
+
+    .updatenode__controls {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .react-flow__node-custom {
@@ -16,180 +22,142 @@
     font-size: 12px;
     line-height: 1;
     letter-spacing: -0.2px;
+
+    .icon {
+        display: inline;
+        margin-right: 8px;
+    }
+
+    .body {
+        display: flex;
+    }
+
+    // .gate {
+    //     .react-flow__handle-top {
+    //         left: 50%;
+    //         top: -4px;
+    //         transform: translate(-50%);
+    //     }
+
+    //     .react-flow__handle-right {
+    //         right: -4px;
+    //         top: 50%;
+    //         transform: translateY(-50%);
+    //     }
+
+    //     .react-flow__handle-bottom {
+    //         top: auto;
+    //         left: 50%;
+    //         bottom: -4px;
+    //         transform: translate(-50%);
+    //     }
+
+    //     .react-flow__handle-left {
+    //         top: 50%;
+    //         left: -4px;
+    //         transform: translateY(-50%);
+    //     }
+
+    //     .label {
+    //         position: absolute;
+    //         top: 0;
+    //         right: 0;
+    //         bottom: 0;
+    //         left: 0;
+    //         display: flex;
+    //         justify-content: center;
+    //         align-items: center;
+    //         padding: 0 2rem;
+    //         text-align: center;
+    //     }
+    // }
 }
 
 .react-flow__node-custom .wrapper {
     // overflow: hidden;
     display: flex;
+    justify-content: center;
     // padding: 2px;
     position: relative;
     border-radius: var(--node-border-radius);
     flex-grow: 1;
-}
 
-// .gradient:before {
-//     content: '';
-//     position: absolute;
-//     padding-bottom: calc(100% * 1.41421356237);
-//     width: calc(100% * 1.41421356237);
-//     background: conic-gradient(from -160deg at 50% 50%,
-//             #e92a67 0deg,
-//             #a853ba 120deg,
-//             #2a8af6 240deg,
-//             #e92a67 360deg);
-//     left: 50%;
-//     top: 50%;
-//     transform: translate(-50%, -50%);
-//     border-radius: 100%;
-// }
+    .lead-time {
+        border-radius: 100%;
+        width: 25px;
+        height: 25px;
+        right: 0;
+        position: absolute;
+        bottom: 0;
+        transform: translate(50%, 50%);
+        display: flex;
+        transform-origin: center center;
+        padding: 2px;
+        overflow: hidden;
+        z-index: 1;
 
-// .react-flow__node-custom.selected .wrapper.gradient:before {
-//     content: '';
-//     background: conic-gradient(from -160deg at 50% 50%,
-//             #e92a67 0deg,
-//             #a853ba 120deg,
-//             #2a8af6 240deg,
-//             rgba(42, 138, 246, 0) 360deg);
-//     animation: spinner 4s linear infinite;
-//     transform: translate(-50%, -50%) rotate(0deg);
-//     z-index: -1;
-// }
-
-// @keyframes spinner {
-//     100% {
-//         transform: translate(-50%, -50%) rotate(-360deg);
-//     }
-// }
-
-.react-flow__node-custom .inner {
-    background: var(--bg-color);
-    padding: 8px;
-    border: 1px solid #1a192b;
-    border-radius: var(--node-border-radius);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    flex-grow: 1;
-    position: relative;
-
-    &.gate {
-        background-color: cornsilk;
-    }
-
-    &.has-subflow {
-        &::before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 8px;
-            left: 8px;
-            background: inherit;
-            border-radius: var(--node-border-radius);
-            border: 1px solid #1a192b;
-            z-index: -1;
+        div {
+            background-color: #777;
+            color: white;
+            flex-grow: 1;
+            border-radius: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
     }
-}
 
-.react-flow__node-custom .icon {
-    display: inline;
-    margin-right: 8px;
-}
+    &.skip {
+        .inner {
+            border-color: var(--bypass-color);
+            color: var(--bypass-color)
+        }
 
-.react-flow__node-custom .body {
-    display: flex;
-}
-
-// .react-flow__node-custom .label {
-//     font-size: 12px;
-//     margin-bottom: 2px;
-//     line-height: 1;
-// }
-
-// .react-flow__node-custom .subline {
-//     font-size: 12px;
-//     color: #777;
-// }
-
-.react-flow__node-custom .weeks {
-    border-radius: 100%;
-    width: 25px;
-    height: 25px;
-    right: 0;
-    position: absolute;
-    bottom: 0;
-    transform: translate(50%, 50%);
-    display: flex;
-    transform-origin: center center;
-    padding: 2px;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.react-flow__node-custom .weeks div {
-    background-color: #777;
-    color: white;
-    flex-grow: 1;
-    border-radius: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.react-flow__node-custom .gate {
-    .react-flow__handle-top {
-        left: 50%;
-        top: -4px;
-        transform: translate(-50%);
+        // .lead-time>div {
+        //     background-color: #ccc;
+        // }
     }
 
-    .react-flow__handle-right {
-        right: -4px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    .react-flow__handle-bottom {
-        top: auto;
-        left: 50%;
-        bottom: -4px;
-        transform: translate(-50%);
-    }
-
-    .react-flow__handle-left {
-        top: 50%;
-        left: -4px;
-        transform: translateY(-50%);
-    }
-
-    .label {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+    .inner {
+        background: var(--bg-color);
+        padding: 8px;
+        border: 1px solid #1a192b;
+        border-radius: var(--node-border-radius);
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 0 2rem;
         text-align: center;
+        flex-grow: 1;
+        position: relative;
+
+        &::after {
+            content: attr(data-label);
+        }
+
+        &.gate {
+            background-color: cornsilk;
+        }
+
+        &.wait {
+            border-radius: 50%;
+            max-width: 50px;
+            width: 50px;
+            height: 50px;
+            outline: 1px dashed #1a192b;
+            outline-offset: -4px;
+
+            &::after {
+                content: "Wait";
+            }
+        }
+
+        &.has-subflow {
+            outline: 1px solid #1a192b;
+            outline-offset: -4px;
+        }
     }
 }
-
-// .react-flow__handle {
-//     opacity: 0;
-// }
-
-// .react-flow__handle.source {
-//     right: -10px;
-// }
-
-// .react-flow__handle.target {
-//     left: -10px;
-// }
 
 .react-flow__node:focus {
     outline: none;

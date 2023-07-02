@@ -1,12 +1,12 @@
 export { render }
 // See https://vite-plugin-ssr.com/data-fetching
-export const passToClient = ['pageProps', 'urlPathname']
+export const passToClient = ['pageProps', 'urlPathname', 'urlParsed', 'env']
 
 import ReactDOMServer from 'react-dom/server'
 import React from 'react'
 import { PageShell } from './PageShell'
 import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr/server'
-import logoUrl from './logo.svg'
+import logoUrl from './logo.png'
 import type { PageContextServer } from './types'
 import { ServerStyleSheet } from "styled-components";
 
@@ -19,6 +19,7 @@ async function render(pageContext: PageContextServer) {
   const sheet = new ServerStyleSheet();
 
   if (Page) {
+    console.log('Server')
     pageHtml = ReactDOMServer.renderToString(
       <PageShell pageContext={pageContext}>
         <Page {...pageProps} />
@@ -46,9 +47,12 @@ async function render(pageContext: PageContextServer) {
       </body>
     </html>`
 
+  console.log(process.env)
+  console.log(import.meta.env)
   return {
     documentHtml,
     pageContext: {
+      env: process.env,
       // We can add some `pageContext` here, which is useful if we want to do page redirection https://vite-plugin-ssr.com/page-redirection
       user: {
         roles: []

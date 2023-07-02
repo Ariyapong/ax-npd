@@ -1,31 +1,35 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
-import logo from './logo.png'
-import { PageContextProvider } from './usePageContext'
-import type { PageContext } from './types'
-import { Link } from './Link'
-import { persistor, store } from '../src/store'
-import './PageShell.css'
+import React from "react";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import logo from "./logo.png";
+import { PageContextProvider } from "./usePageContext";
+import type { PageContext } from "./types";
+import { Link } from "./Link";
+import { persistor, store } from "../src/store";
+import "./PageShell.css";
+// import LayoutDefault from "@/layout/LayoutDefault";
 
-export { PageShell }
+export { PageShell };
 
-function PageShell({ children, pageContext }: { children?: React.ReactNode; pageContext?: PageContext }) {
-
+function PageShell({
+  children,
+  pageContext,
+}: {
+  children?: React.ReactNode;
+  pageContext?: PageContext;
+}) {
   return (
     <React.StrictMode>
       <PageContextProvider pageContext={pageContext!}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <Layout>
+            {children}
+            {/* <LayoutDefault>
               <Sidebar>
                 <Logo />
                 <Link className="navitem" href="/">
                   Home
                 </Link>
-                {/* <Link className="navitem" href="/about">
-                  About
-                </Link> */}
                 <Link className="navitem" href="/report">
                   Report
                 </Link>
@@ -37,23 +41,23 @@ function PageShell({ children, pageContext }: { children?: React.ReactNode; page
                 </Link>
               </Sidebar>
               <Content>{children}</Content>
-            </Layout>
+            </LayoutDefault> */}
           </PersistGate>
-        </Provider >
+        </Provider>
       </PageContextProvider>
     </React.StrictMode>
-  )
+  );
 }
 
-function Layout({ children }: { children: React.ReactNode }) {
+/* function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="layout">
       {children}
     </div>
   )
-}
+} */
 
-function Sidebar({ children }: { children: React.ReactNode }) {
+/* function Sidebar({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
@@ -68,9 +72,9 @@ function Sidebar({ children }: { children: React.ReactNode }) {
       {children}
     </div>
   )
-}
+} */
 
-function Content({ children }: { children: React.ReactNode }) {
+/* function Content({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
@@ -83,19 +87,19 @@ function Content({ children }: { children: React.ReactNode }) {
       {children}
     </div>
   )
-}
+} */
 
-function Logo() {
+/* function Logo() {
   return (
     <div
       style={{
         marginTop: 20,
-        marginBottom: 10
+        marginBottom: 10,
       }}
     >
       <a href="/">
         <img src={logo} height={64} width={64} alt="logo" />
       </a>
     </div>
-  )
-}
+  );
+} */

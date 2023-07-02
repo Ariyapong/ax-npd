@@ -1,7 +1,7 @@
-export type { PageContextServer }
-export type { PageContextClient }
-export type { PageContext }
-export type { PageProps }
+export type { PageContextServer };
+export type { PageContextClient };
+export type { PageContext };
+export type { PageProps };
 
 import type {
   PageContextBuiltIn,
@@ -10,29 +10,30 @@ import type {
   PageContextBuiltInClientWithClientRouting as PageContextBuiltInClient
   /*/
   // When using Server Routing
-  PageContextBuiltInClientWithServerRouting as PageContextBuiltInClient
+  PageContextBuiltInClientWithServerRouting as PageContextBuiltInClient,
   //*/
-} from 'vite-plugin-ssr/types'
+} from "vite-plugin-ssr/types";
 
-type Page = (pageProps: PageProps) => React.ReactElement
-type PageProps = {}
-type User = {}
+type Page = (pageProps: PageProps) => React.ReactElement;
+type PageProps = {};
+type User = {};
 
 export type PageContextCustom = {
-  Page: Page
-  pageProps?: PageProps
-  urlPathname: string
-  env: Record<string, any>
+  Page: Page;
+  pageProps?: PageProps;
+  urlPathname: string;
+  env: Record<string, any>;
   exports: {
+    layout?: React.ReactElement;
     documentProps?: {
-      title?: string
-      description?: string
-    }
-  }
-  user: User
-}
+      title?: string;
+      description?: string;
+    };
+  };
+  user: User;
+};
 
-type PageContextServer = PageContextBuiltIn<Page> & PageContextCustom
-type PageContextClient = PageContextBuiltInClient<Page> & PageContextCustom
+type PageContextServer = PageContextBuiltIn<Page> & PageContextCustom;
+type PageContextClient = PageContextBuiltInClient<Page> & PageContextCustom;
 
-type PageContext = PageContextClient | PageContextServer
+type PageContext = PageContextClient | PageContextServer;

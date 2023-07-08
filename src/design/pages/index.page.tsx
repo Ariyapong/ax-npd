@@ -3,11 +3,11 @@ import React from "react";
 import LayoutCreateProject from "@/layout/LayoutCreateProject";
 import { usePageContext } from "../../../renderer/usePageContext";
 
-import { Page as ListPage } from "./list-project.page";
+/* import { Page as ListPage } from "./list-project.page";
 import { Page as CreatePage } from "./create-project.page";
 import { Page as EditPage } from "./edit-project.page";
 import { Page as ViewPage } from "./view-project.page";
-import { Page as OverviewPage } from "./overview-project.page";
+import { Page as OverviewPage } from "./overview-project.page"; */
 
 export { Page };
 export { LayoutCreateProject as Layout };
@@ -33,18 +33,18 @@ function Page({ children }: { children: React.ReactNode }) {
     <div>
       <div>
         <div>
-          <h1>NPD Create Project Flow</h1>
+          <h1>NPD Design Domain</h1>
         </div>
-        <InnerView view={view} id={id} />
+        {/* <InnerView view={view} id={id} /> */}
       </div>
     </div>
   );
 }
 
 // implement nested routing
-function InnerView({
+/* function InnerView({
   view,
-  id
+  id,
 }: {
   view: "overview" | "list" | "create" | "edit" | "view";
   id: string;
@@ -65,6 +65,5 @@ function InnerView({
   if (view === "view") {
     return <ViewPage pageId={id} />;
   }
-
   return <>Index Page</>;
-}
+} */

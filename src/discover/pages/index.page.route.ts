@@ -5,7 +5,7 @@ import type { PageContext } from "../../../renderer/types";
 export default (pageContext: PageContext) => {
   console.log("trigger result route", pageContext.urlPathname);
   {
-    const result = resolveRoute("/create-project", pageContext.urlPathname);
+    const result = resolveRoute("/discover", pageContext.urlPathname);
     if (result.match) {
       result.routeParams.view = "index";
       console.log("check route result : ", result);

@@ -2,9 +2,11 @@ import React from "react";
 import logo from "../../renderer/logo.png";
 import { Link } from "../../renderer/Link";
 
-export { LayoutDefault };
+// export { LayoutCreateProject };
 
-function LayoutDefault({
+export default LayoutCreateProject;
+
+function LayoutCreateProject({
   children,
 }: {
   children: React.ReactNode;
@@ -13,32 +15,26 @@ function LayoutDefault({
     <div className="layout">
       <Sidebar>
         <Logo />
-        <Link className="navitem" href="/">
+        <Link className="navitem" href="/create-project">
           Home
         </Link>
-        {/* <Link className="navitem" href="/about">
-                  About
-                </Link> */}
-        <Link className="navitem" href="/report">
-          Report
+        <Link className="navitem" href="/create-project/list">
+          Work List
         </Link>
-        <Link className="navitem" href="/workflow">
-          Workflow
+        <Link className="navitem" href="/create-project/create">
+          Create
         </Link>
-        <Link className="navitem" href="/pivot">
-          Pivot
+        <Link className="navitem" href="/create-project/1/edit">
+          Edit
         </Link>
-        <Link className="navitem" href="/create-project">
-          Create Project
-        </Link>
-        <Link className="navitem" href="/discover">
-          Discover
-        </Link>
-        <Link className="navitem" href="/design">
-          Design
+        <Link className="navitem" href="/create-project/1/view">
+          View
         </Link>
       </Sidebar>
-      <Content>{children}</Content>
+      <div>
+        
+        <Content>{children}</Content>
+      </div>
     </div>
   );
 }

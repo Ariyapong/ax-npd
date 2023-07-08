@@ -33,7 +33,7 @@ function Page({ children }: { children: React.ReactNode }) {
     <div>
       <div>
         <div>
-          <h1>NPD Create Project Flow</h1>
+          <h1>NPD Discovery Flow</h1>
         </div>
         <InnerView view={view} id={id} />
       </div>
@@ -44,7 +44,7 @@ function Page({ children }: { children: React.ReactNode }) {
 // implement nested routing
 function InnerView({
   view,
-  id
+  id,
 }: {
   view: "overview" | "list" | "create" | "edit" | "view";
   id: string;
